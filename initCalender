@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+mkdirPath="/bin/mkdir"
+datePath="/bin/date"
+thisYear="$($datePath -j +%Y)"
+
+
+
+getAllMonthsArray() {
+
+for monthIndex in {01..12}
+   do
+	allMonths="$($datePath -j -f %m%Y $monthIndex$thisYear +%m%b)"_$calenderName
+	return_allMonthsArray+=($allMonths)
+   done
+
+}
+
+initAllMonthsFunc() {
+
+for monthIndex in {01..12}
+   do
+	allMonths="$($datePath -j -f %m%Y $monthIndex$thisYear +%m%b)"_$calenderName
+	return_allMonthsArray+=($allMonths)
+
+	if   [[ "$mkdirMonths" == "true" ]]; then 
+		$mkdirPath -p $initYearPath/$allMonths && echo "$allMonths directory has successfully been created in $thisYear.$calenderName." 
+	elif [[ "$mkdirMonths" == "false" ]]; then 
+		echo "warning: allMonths directories have not been created, mkdirMonths variable is set to $mkdirMonths." && break 
+	elif [[ -n "$mkdirMonths" ]]; then 
+		echo "mkdirMonths:$mkdirMonths is mis-spelled or it does  not exist, it needs to be either true or false." && $(rm -R $initYearPath) && break	
+	else  
+		: 		
+	fi
+   done
+}
+
+initYear() {
+
+local currentYearPath="$(pwd)/$($datePath -j +%Y)"
+$mkdirPath $currentYearPath"_$calenderName"
+
+initYearPath=$currentYearPath"_$calenderName"
+}
+
+
+initMonths() {
+#local mkdirMonths="false"
+local mkdirMonths="true"
+
+initAllMonthsFunc; 
+}
+
+initWeeks() {
+
+local thisYear="$($datePath -j +%Y)"
+local allWeeksArray=()
+#local allMonthsArray=($globalMonths)
+#
+#local jan=${allMonthsArray[0]}
+#local feb=${allMonthsArray[1]}
+#local mar=${allMonthsArray[2]}
+#local apr=${allMonthsArray[3]}
+#local may=${allMonthsArray[4]}
+#local jun=${allMonthsArray[5]}
+#local jul=${allMonthsArray[6]}
+#local aug=${allMonthsArray[7]}
+#local sep=${allMonthsArray[8]}
+#local oct=${allMonthsArray[9]}
+#local nov=${allMonthsArray[10]}
+#local dec=${allMonthsArray[11]}
+#
+local thisYear="$($datePath -j +%Y)"
+#globalGetAllMonths
+
+
+#for weekIndex in {01..366..07}
+#  do 
+#    local allWeeks="$($datePath -j -f %j%Y $weekIndex$thisYear +%b_%A%d_week%V)"_$calenderName
+#
+#    allWeeksArray+=($allWeeks)
+#    #$mkDir -p $decPath/{$allWeeksOfDec},}
+#  done
+echo ${allMonthsArray[@]}
+#echo $jan
+ }
+
+read -p "Enter the name of your calender: " calenderName
+initYear
+initMonths
+#initWeeks
+
+#mkdir -p head/{shoulders/{hand,feet},}
+
+
+
