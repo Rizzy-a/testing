@@ -7,18 +7,24 @@ datePath="/bin/date"
 thisYear="$($datePath -j +%Y)"
 
 
-jan="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-feb="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-mar="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-apr="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-may="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-jun="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-jul="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-aug="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-sep="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-oct="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-nov="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
-dec="$($datePath -j -f %m%Y $month$day$Year +%m%b)"_$calenderName
+newCalTemplate() {
+
+local jan="$($datePath -j -f $dateInput 01$day$year +$dateOutput)"_$calenderName
+local feb="$($datePath -j -f $dateInput 02$day$year +$dateOutput)"_$calenderName
+local mar="$($datePath -j -f $dateInput 03$day$year +$dateOutput)"_$calenderName
+local apr="$($datePath -j -f $dateInput 04$day$year +$dateOutput)"_$calenderName
+local may="$($datePath -j -f $dateInput 05$day$year +$dateOutput)"_$calenderName
+local jun="$($datePath -j -f $dateInput 06$day$year +$dateOutput)"_$calenderName
+local jul="$($datePath -j -f $dateInput 07$day$year +$dateOutput)"_$calenderName
+local aug="$($datePath -j -f $dateInput 08$day$year +$dateOutput)"_$calenderName
+local sep="$($datePath -j -f $dateInput 09$day$year +$dateOutput)"_$calenderName
+local oct="$($datePath -j -f $dateInput 10$day$year +$dateOutput)"_$calenderName
+local nov="$($datePath -j -f $dateInput 11$day$year +$dateOutput)"_$calenderName
+local dec="$($datePath -j -f $dateInput 12$day$year +$dateOutput)"_$calenderName
+
+local -n referenceAllMonths="$1" || return 1
+declare -ag referenceAllMonths=($jan $feb $mar $apr $may $jun $jul $aug $sep $oct $nov $dec)
+}
 
 getAllMonthsArray() {
 
@@ -100,11 +106,24 @@ echo ${allMonthsArray[@]}
  }
 
 read -p "Enter the name of your calender: " calenderName
-initYear
-initMonths
+#initYear
+#initMonths
 #initWeeks
-#initDays
+#initDaysd
+#
+configTemplate() {
 
+local dateInput='%m%d%Y'
+local day='01'
+local year="$thisYear"
+local dateOutput='%m%b'
+
+
+
+newCalTemplate workPlaylist
+}
+configTemplate
+echo ${referenceAllMonths[@]}
 #mkdir -p head/{shoulders/{hand,feet},}
 
 
