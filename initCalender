@@ -4,10 +4,10 @@
 #use the below jan-dec global variables in a function that all init funcs can use, and further add to this function a way for it to be stored in an array that the other init funcs can use without them interfeering with eachother, each having their own state to whatever extent possible, also in this function write a long switch statement with global variables for the possible date %m%Y%b%d...etc., so that the innitFuncs can use their own local variables to interface with the global variables array.
 mkdirPath="/bin/mkdir"
 datePath="/bin/date"
-thisYear="$($datePath -j +%Y)"
+declare -r currentYear="$($datePath -j +%Y)"
 
 
-newCalTemplate() {
+makeCalTemplateFor() {
 
 local jan="$($datePath -j -f $dateInput 01$day$year +$dateOutput)"_$calenderName
 local feb="$($datePath -j -f $dateInput 02$day$year +$dateOutput)"_$calenderName
@@ -57,19 +57,25 @@ for monthIndex in {01..12}
 
 initYear() {
 
-local currentYearPath="$(pwd)/$thisYear"
-initYearPath=$currentYearPath"_$calenderName"
-$mkdirPath $initYearPath 
+local -r currentYearPath="$(pwd)/$currentYear"
+local -r currentYearName=$currentYearPath"_$calenderName"
+$mkdirPath $currentYearName 
 
 }
-
 
 initMonths() {
-#local mkdirMonths="false"
-local mkdirMonths="true"
 
-initAllMonthsFunc; 
+makeCalTemplateFor allCurrentYearMonths 
+
 }
+
+
+#initMonths() {
+##local mkdirMonths="false"
+#local mkdirMonths="true"
+#
+#initAllMonthsFunc; 
+#}
 
 initWeeks() {
 
@@ -106,24 +112,23 @@ echo ${allMonthsArray[@]}
  }
 
 read -p "Enter the name of your calender: " calenderName
-#initYear
+initYear
 #initMonths
 #initWeeks
 #initDaysd
 #
-configTemplate() {
-
-local dateInput='%m%d%Y'
-local day='01'
-local year="$thisYear"
-local dateOutput='%m%b'
-
-
-
-newCalTemplate workPlaylist
-}
-configTemplate
-echo ${referenceAllMonths[@]}
+#configWorkPlaylist() {
+#
+#local dateInput='%m%d%Y'
+#local day='01'
+#local year="$thisYear"
+#local dateOutput='%m%b'
+#
+#
+#
+#newCalTemplate workPlaylist
+#}
+#configWorkPlaylist
 #mkdir -p head/{shoulders/{hand,feet},}
 
 
