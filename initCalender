@@ -23,7 +23,7 @@ local nov="$($datePath -j -f $dateInput 11$day$year +$dateOutput)"_$calenderName
 local dec="$($datePath -j -f $dateInput 12$day$year +$dateOutput)"_$calenderName
 
 local -n referenceAllMonths="$1" || return 1
-declare -ag referenceAllMonths=($jan $feb $mar $apr $may $jun $jul $aug $sep $oct $nov $dec)
+local -ag referenceAllMonths=($jan $feb $mar $apr $may $jun $jul $aug $sep $oct $nov $dec)
 }
 
 getAllMonthsArray() {
@@ -64,25 +64,36 @@ $mkdirPath $currentYearName
 }
 
 initMonths() {
-
-#variables used by the allMonths template (only one dateInput, day, year, and dateOutput can be used by allMonths for each initialization. 
+#makeCalTemplateFor syntax: dateInput, day, year, dateOutput
 local -r dateInput='%m%d%Y' #"MM/DD/YYYY" 
-
 local -r day='01'
-
 local -r year="$(date -j +%Y)" # current year
 #local -r year="$(date -j -v-1y +%Y)" # 1 year ago
 #local -r year="$(date -j -v-2y +%Y)" # 2 years ago
-
 #local -r dateOutput='%m%B' #"MM/full month name" "01January 02February 03March"
 local -r dateOutput='%m%b' #"MM/month name abbreviated" "01Jan 02Feb 03Mar" 
 
 makeCalTemplateFor allMonths
-
-local -rn testArray=referenceAllMonths
-echo ${testArray[@]}
+#local -rn testArray=referenceAllMonths
+#echo ${testArray[3]}
+echo ${referenceAllMonths[3]}
 }
 
+initMonths2() {
+#makeCalTemplateFor syntax: dateInput, day, year, dateOutput
+local -r dateInput='%m%d%Y' #"MM/DD/YYYY" 
+local -r day='05'
+local -r year="$(date -j +%Y)" # current year
+#local -r year="$(date -j -v-1y +%Y)" # 1 year ago
+#local -r year="$(date -j -v-2y +%Y)" # 2 years ago
+#local -r dateOutput='%m%B' #"MM/full month name" "01January 02February 03March"
+local -r dateOutput='%m%b' #"MM/month name abbreviated" "01Jan 02Feb 03Mar" 
+
+makeCalTemplateFor allMonths2
+#local -rn testArray=referenceAllMonths
+#echo ${testArray[3]}
+echo ${referenceAllMonths[3]}
+}
 
 #initMonths() {
 ##local mkdirMonths="false"
@@ -128,6 +139,7 @@ echo ${allMonthsArray[@]}
 read -p "Enter the name of your calender: " calenderName
 initYear
 initMonths
+initMonths2
 #initWeeks
 #initDaysd
 #
