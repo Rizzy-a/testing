@@ -2,9 +2,8 @@
 
 #when you return from learning about bash/shell data structures and algorithms, learning how it stores values and passes references, etc.,you plan to implement the following: 
 #use the below jan-dec global variables in a function that all init funcs can use, and further add to this function a way for it to be stored in an array that the other init funcs can use without them interfeering with eachother, each having their own state to whatever extent possible, also in this function write a long switch statement with global variables for the possible date %m%Y%b%d...etc., so that the innitFuncs can use their own local variables to interface with the global variables array.
-mkdirPath="/bin/mkdir"
+mkdir="/bin/mkdir"
 datePath="/bin/date"
-declare -r currentYear="$($datePath -j +%Y)"
 
 
 makeCalTemplateFor() {
@@ -44,7 +43,7 @@ for monthIndex in {01..12}
 	return_allMonthsArray+=($allMonths)
 
 	if   [[ "$mkdirMonths" == "true" ]]; then 
-		$mkdirPath -p $initYearPath/$allMonths && echo "$allMonths directory has successfully been created in $thisYear.$calenderName." 
+		$mkdir -p $initYearPath/$allMonths && echo "$allMonths directory has successfully been created in $thisYear.$calenderName." 
 	elif [[ "$mkdirMonths" == "false" ]]; then 
 		echo "warning: allMonths directories have not been created, mkdirMonths variable is set to $mkdirMonths." && break 
 	elif [[ -n "$mkdirMonths" ]]; then 
@@ -55,25 +54,38 @@ for monthIndex in {01..12}
    done
 }
 
-initYear() {
+declare -r currentYear="$($datePath -j +%Y)"
+declare -r previousYear="$($datePath -j -v-1y +%Y)" 
+declare -r twoYearsAgo="$($datePath -j -v-2y +%Y)"
 
+initYear() {
+local -g initYearPath="$currentYearName"
 local -r currentYearPath="$(pwd)/$currentYear"
 local -r currentYearName=$currentYearPath"_$calenderName"
-$mkdirPath $currentYearName 
+#$mkdir $currentYearName 
 
 }
-
+echo $initYearPath
 initMonths() {
 #makeCalTemplateFor syntax: dateInput, day, year, dateOutput
 local -r dateInput='%m%d%Y' #"MM/DD/YYYY" 
-local -r day='05'
-local -r year="$(date -j +%Y)" # current year
-#local -r year="$(date -j -v-1y +%Y)" # 1 year ago
-#local -r year="$(date -j -v-2y +%Y)" # 2 years ago
+local -r day='01'
+local -r year="$currentYear"
 #local -r dateOutput='%m%B' #"MM/full month name" "01January 02February 03March"
 local -r dateOutput='%m%b' #"MM/month name abbreviated" "01Jan 02Feb 03Mar" 
 
-makeCalTemplateFor Months
+makeCalTemplateFor initMonths
+local -nr allMonthsArray="referenceAllMonths"
+
+for months in {00..11} 
+
+do 
+		if   [[ "$mkdirMonths" == "true" ]]; then 
+		$mkdir -p $initYearPath/$allMonths && echo "$allMonths directory has successfully been created in $thisYear.$calenderName." 
+	elif [[ "$mkdirMonths" == "false" ]]; then 
+		echo "warning: allMonths directories have not been created, mkdirMonths variable is set to $mkdirMonths." && break 
+		fi
+done 
 
 }
 
@@ -118,9 +130,9 @@ local thisYear="$($datePath -j +%Y)"
 #echo $jan
  }
 
-#read -p "Enter the name of your calender: " calenderName
-#initYear
-initMonths
+read -p "Enter the name of your calender: " calenderName
+initYear
+#initMonths
 #initWeeks
 #initDaysd
 #
