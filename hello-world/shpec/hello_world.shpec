@@ -1,0 +1,14 @@
+set -o nounset
+shopt -s expand_aliases
+alias it='(_shpec_failures=0; it'
+alias ti='return "$_shpec_failures"); (( _shpec_failures += $?, _shpec_examples++ ))'
+
+
+source "$(dirname "$(greadlink -f "$BASH_SOURCE")")"/../bin/hello-world
+
+describe hello_world
+  it "echos 'hello, world!'"
+    result=$(hello_world)
+    assert equal "hello, world!" "$result"
+  ti
+end

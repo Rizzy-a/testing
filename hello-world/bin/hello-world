@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# source support.bash
+#   or
+# source "$(dirname  "$(readlink -f "$BASH_SOURCE")")"/support.bash
+
+source "$(dirname "$(readlink -f "$BASH_SOURCE")")"/../lib/support.bash
+
+main() {
+hello_world
+}
+
+hello_world () { 
+	echo "hello, world!"	
+}
+
+sourced && return
+strict_mode on
+
+main "@"
